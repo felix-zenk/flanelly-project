@@ -15,15 +15,15 @@ pub enum AExp {
 impl AExp {
     /// Return `true` if there exists a variable somewhere in the arithmetic expression
     pub fn contains_var(&self, x: &VarName) -> bool {
-        match self {
+        return match self {
             AExp::Add(a1, a2) | AExp::Mul(a1, a2) => {
-                return a1.contains_var(x) or a2.contains_var(x);
+                a1.contains_var(x) | a2.contains_var(x)
             }
             AExp::Num(_) => {
-                return false;
+                false
             }
             AExp::Var(v) => {
-                return v == x;
+                v == x
             }
         }
     }
