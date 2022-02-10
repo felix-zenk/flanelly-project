@@ -1,0 +1,280 @@
+{
+    "graph": {
+        "nodes": [
+            {
+                "node": {
+                    "Assign": [
+                        "x",
+                        {
+                            "Num": 3
+                        }
+                    ]
+                },
+                "annot": {
+                    "pre": {
+                        "set": []
+                    },
+                    "post": {
+                        "set": [
+                            {
+                                "Num": 3
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "node": "Init",
+                "annot": {
+                    "pre": {
+                        "set": []
+                    },
+                    "post": {
+                        "set": []
+                    }
+                }
+            },
+            {
+                "node": {
+                    "Branch": {
+                        "LessEq": [
+                            {
+                                "Var": "a"
+                            },
+                            {
+                                "Var": "b"
+                            }
+                        ]
+                    }
+                },
+                "annot": {
+                    "pre": {
+                        "set": [
+                            {
+                                "Num": 3
+                            }
+                        ]
+                    },
+                    "post": {
+                        "set": [
+                            {
+                                "Var": "b"
+                            },
+                            {
+                                "Var": "a"
+                            },
+                            {
+                                "Num": 3
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "node": {
+                    "Assign": [
+                        "y",
+                        {
+                            "Num": 2
+                        }
+                    ]
+                },
+                "annot": {
+                    "pre": {
+                        "set": [
+                            {
+                                "Var": "a"
+                            },
+                            {
+                                "Var": "b"
+                            },
+                            {
+                                "Num": 3
+                            }
+                        ]
+                    },
+                    "post": {
+                        "set": [
+                            {
+                                "Num": 2
+                            },
+                            {
+                                "Var": "b"
+                            },
+                            {
+                                "Var": "a"
+                            },
+                            {
+                                "Num": 3
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "node": "Skip",
+                "annot": {
+                    "pre": {
+                        "set": [
+                            {
+                                "Num": 3
+                            },
+                            {
+                                "Var": "b"
+                            },
+                            {
+                                "Var": "a"
+                            }
+                        ]
+                    },
+                    "post": {
+                        "set": [
+                            {
+                                "Num": 3
+                            },
+                            {
+                                "Var": "b"
+                            },
+                            {
+                                "Var": "a"
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "node": {
+                    "Branch": {
+                        "LessEq": [
+                            {
+                                "Num": 4
+                            },
+                            {
+                                "Num": 3
+                            }
+                        ]
+                    }
+                },
+                "annot": {
+                    "pre": {
+                        "set": [
+                            {
+                                "Num": 3
+                            }
+                        ]
+                    },
+                    "post": {
+                        "set": [
+                            {
+                                "Num": 3
+                            },
+                            {
+                                "Num": 4
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "node": "Skip",
+                "annot": {
+                    "pre": {
+                        "set": [
+                            {
+                                "Num": 4
+                            },
+                            {
+                                "Num": 3
+                            }
+                        ]
+                    },
+                    "post": {
+                        "set": [
+                            {
+                                "Num": 4
+                            },
+                            {
+                                "Num": 3
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "node": "Terminal",
+                "annot": {
+                    "pre": {
+                        "set": [
+                            {
+                                "Num": 3
+                            },
+                            {
+                                "Num": 4
+                            }
+                        ]
+                    },
+                    "post": {
+                        "set": [
+                            {
+                                "Num": 3
+                            },
+                            {
+                                "Num": 4
+                            }
+                        ]
+                    }
+                }
+            }
+        ],
+        "node_holes": [],
+        "edge_property": "directed",
+        "edges": [
+            [
+                1,
+                0,
+                "Plain"
+            ],
+            [
+                0,
+                2,
+                "Plain"
+            ],
+            [
+                2,
+                3,
+                "True"
+            ],
+            [
+                2,
+                4,
+                "False"
+            ],
+            [
+                3,
+                5,
+                "Plain"
+            ],
+            [
+                4,
+                5,
+                "Plain"
+            ],
+            [
+                5,
+                6,
+                "True"
+            ],
+            [
+                6,
+                5,
+                "Plain"
+            ],
+            [
+                5,
+                7,
+                "False"
+            ]
+        ]
+    },
+    "init": 1
+}

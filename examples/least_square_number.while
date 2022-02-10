@@ -1,0 +1,12 @@
+# This example is given as part of the exercise sheet. Running an available
+# expression analysis on it, it becomes apparent that there is an expression
+# that needs not to be recomputed in this code (i.e., optimization by the
+# compiler is possible).
+
+# Compute the least square number that is greater than input `x`.
+
+count := 1;
+while count*count <= x do
+    count := count + 1
+end;
+z := count*count

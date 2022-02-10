@@ -1,0 +1,14 @@
+# This example produces the CFG as found in the introducing example of constant
+# propagation, slide 28. Constant propagation analysis does not yield any
+# useful information here.
+
+x := 3;
+y := 2;
+if 3 <= 3 then
+  x := x + 2;
+  y := 0 
+else
+  y := y + (-2);
+  y := y + 1
+end;
+z := x + y

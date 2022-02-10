@@ -1,0 +1,2 @@
+# Just some test program.
+x := 3 ; if a <= b then y := 2 else skip end; while 4 <= 3 do skip end

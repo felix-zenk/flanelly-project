@@ -1,0 +1,12 @@
+# This example produces the CFG as found in the retake-exam of 2019/20. 
+# Constant propagation analysis yields that in the last line, `z` is constant
+# and thus need not to be looked up (i.e. a compiler could optimize this).
+
+z := 7;
+i := x;
+y := 1;
+while 0 <= i + 1 do
+  y := y * i;
+  i := i + (-1)
+end;
+z := y + z

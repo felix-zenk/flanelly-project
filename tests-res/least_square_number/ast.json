@@ -1,0 +1,1 @@
+{"Prog":[{"Assign":["count",{"Num":1}]},{"While":[{"LessEq":[{"Mul":[{"Var":"count"},{"Var":"count"}]},{"Var":"x"}]},{"Prog":[{"Assign":["count",{"Add":[{"Var":"count"},{"Num":1}]}]}]}]},{"Assign":["z",{"Mul":[{"Var":"count"},{"Var":"count"}]}]}]}

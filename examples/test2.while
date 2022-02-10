@@ -1,0 +1,9 @@
+# Just some test program.
+z := 7;
+i := x;
+y := 1;
+while 1 <= i do
+    y := y * i;
+    i := i + (-1)
+end;
+z := y + z
