@@ -12,13 +12,27 @@ impl MemConfig {
     /// Read operation (with `0` as default value)
     pub fn lookup(&self, x: &VarName) -> i32 {
         let MemConfig(map) = self;
-        todo!()
+        match x {
+            VarName => {
+                if map.contains_key(&x) {
+                    map.get(x)
+                } else {
+                    0
+                }
+            }
+        }
+        return 0
     }
 
     /// Write operation
     pub fn assign(&mut self, x: &VarName, n: i32) {
         let MemConfig(map) = self;
-        todo!()
+        match x {
+            None => {}
+            VarName(v) => {
+                map.insert(VarName(v.to_string()), n)
+            }
+        }
     }
 }
 
