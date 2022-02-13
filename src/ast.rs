@@ -19,8 +19,8 @@ pub enum ProgAtom {
     // Rust Expl.: The `Box<BExp>` type represents *references to data of the `BExp` type on the heap*. This is the mechanism used to represent arbitrarily-large syntax trees, analogously to how linked lists are implemented.
     Skip,
     Assign(VarName, Box<AExp>),
-    Cond(Box<BExp>, Box<Prog>, Box<Prog>),
-    While(Box<BExp>, Box<Prog>),
+    Cond(Box<BExp>, Box<Prog>, Box<Prog>),  // if BExp, then Prog, else Prog
+    While(Box<BExp>, Box<Prog>),  // while BExp, do Prog
 }
 
 impl Display for Prog {
