@@ -30,7 +30,7 @@ impl MemConfig {
         match x {
             None => {}
             VarName(v) => {
-                map.insert(VarName(v.to_string()), n)
+                map.insert(**x, n)
             }
         }
     }
@@ -55,7 +55,7 @@ pub fn eval_prog(p: &Prog, mem: MemConfig) -> MemConfig {
 
 /// Evaluate atomic program on given memory configuration. This function may diverge.
 pub fn eval_prog_atom(p: &ProgAtom, mut mem: MemConfig) -> MemConfig {
-    match p {
+    return match p {
         Skip => { mem }
         Assign(x, a) => {
             let n = eval_aexp(a, &mem);
@@ -63,10 +63,18 @@ pub fn eval_prog_atom(p: &ProgAtom, mut mem: MemConfig) -> MemConfig {
             mem
         }
         Cond(b, p1, p2) => {
-            todo!()
+            if eval_bexp(b, &mem) {
+                eval_prog_atom(p1, mem)
+            }
+            else {
+                eval_prog_atom(p2, mem)
+            }
         }
-        While(b, p) => {
-            todo!()
+        While(b, p1) => {
+            if eval_bexp(b, &mem) {
+                eval_prog_atom(p1, mem);
+                eval_prog_atom(p, &**mem)  // TODO right?
+            }
         }
     }
 }
@@ -83,5 +91,10 @@ pub fn eval_aexp(a: &AExp, mem: &MemConfig) -> i32 {
 
 /// Evaluate boolean expression on given memory configuration. This function always returns.
 pub fn eval_bexp(a: &BExp, mem: &MemConfig) -> bool {
-    todo!();
+    // todo!();
+
+    a.sub_aexps();
+    // mem.lookup() ??
+
+    return true
 }
