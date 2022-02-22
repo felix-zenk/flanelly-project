@@ -8,6 +8,8 @@ use crate::{common::VarName, ast::ProgAtom, ast::Prog};
 use crate::aexp::*;
 use crate::bexp::*;
 
+use petgraph::graph::EdgeIndex;
+
 ////////////////////
 // CFG Definition //
 ////////////////////
@@ -183,7 +185,11 @@ impl<A> Cfg<A> {
     /// Map a Cfg<A> to a Cfg<B> by mapping the node annotations according to `f`
     pub fn map<B, F>(self: &Cfg<A>, f: F) -> Cfg<B>
     where F: Fn(&A) -> B {
-        todo!()
+        let nodes = |_: NodeIndex, node: &AnnotNode<A>| { return AnnotNode::new(node.node.clone(), f(&node.annot)); };
+        let edges = |_: EdgeIndex, x: &Edge| x.clone();
+
+        let graph = self.graph.map(nodes, edges);
+        return Cfg::new(graph, self.init)
     }
 
     /// Return the predecessor nodes of a given node. If there are no predecessors (only possible for the initial node), then return `None`.
