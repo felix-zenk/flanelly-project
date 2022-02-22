@@ -10,10 +10,10 @@ use crate::flow_analysis::common::SemiLat;
 use super::common::FlowSemantics;
 
 /// An annotation consisting of a pre-value and a post-value. Both values will be elements of the property space `T`.
-#[derive(PartialEq,Clone,Debug,Serialize,Deserialize,Eq,Hash)]
+#[derive(PartialEq, Clone, Debug, Serialize, Deserialize, Eq, Hash)]
 pub struct MfpAnnot<L> {
     pre: L,
-    post: L
+    post: L,
 }
 
 pub fn mfp<L: SemiLat + FlowSemantics>(cfg_raw: &Cfg<RawAnnot>) -> Cfg<MfpAnnot<L>> {

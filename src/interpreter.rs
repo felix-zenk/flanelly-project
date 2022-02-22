@@ -8,7 +8,7 @@ pub struct MemConfig(HashMap<VarName, i32>);
 
 impl MemConfig {
     pub fn new() -> Self { Self(HashMap::new()) }
-    
+
     /// Read operation (with `0` as default value)
     pub fn lookup(&self, x: &VarName) -> i32 {
         let MemConfig(map) = self;
@@ -20,7 +20,7 @@ impl MemConfig {
         let MemConfig(map) = self;
         match x {
             None => {}
-            VarName(v) => {
+            VarName => {
                 map.insert(**x, n)  // TODO maybe x.clone()
             }
         }
@@ -41,7 +41,7 @@ pub fn eval(p: &Prog, input: i32) -> i32 {
 /// Evaluate program on given memory configuration. This functin may diverge.
 pub fn eval_prog(p: &Prog, mem: MemConfig) -> MemConfig {
     let Prog::Prog(ps) = p;
-    ps.iter().fold(mem, |mem,p| eval_prog_atom(p, mem))
+    ps.iter().fold(mem, |mem, p| eval_prog_atom(p, mem))
 }
 
 /// Evaluate atomic program on given memory configuration. This function may diverge.
@@ -56,8 +56,7 @@ pub fn eval_prog_atom(p: &ProgAtom, mut mem: MemConfig) -> MemConfig {
         Cond(b, p1, p2) => {
             if eval_bexp(b, &mem) {
                 eval_prog_atom(p1, mem)
-            }
-            else {
+            } else {
                 eval_prog_atom(p2, mem)
             }
         }
@@ -67,7 +66,7 @@ pub fn eval_prog_atom(p: &ProgAtom, mut mem: MemConfig) -> MemConfig {
             }
             return mem;
         }
-    }
+    };
 }
 
 /// Evaluate arithmetic expression on given memory configuration. This function always returns.
@@ -86,14 +85,14 @@ pub fn eval_bexp(a: &BExp, mem: &MemConfig) -> bool {
         LessEq(a1, a2) => {
             eval_aexp(a1, mem) <= eval_aexp(a2, mem)
         }
-        Conjunction(b1,b2) => {
+        Conjunction(b1, b2) => {
             eval_bexp(b1, mem) && eval_bexp(b2, mem)
         }
-        Disjunction(b1,b2) => {
+        Disjunction(b1, b2) => {
             eval_bexp(b1, mem) || eval_bexp(b2, mem)
         }
         Negation(val) => {
             !eval_bexp(val, mem)
         }
-    }
+    };
 }

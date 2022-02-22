@@ -4,7 +4,7 @@ use serde::{Serialize, Deserialize};
 use crate::aexp::*;
 
 /// Boolean expression
-#[derive(PartialEq,Clone,Debug,Serialize,Deserialize,Eq,Hash)]
+#[derive(PartialEq, Clone, Debug, Serialize, Deserialize, Eq, Hash)]
 pub enum BExp {
     LessEq(Box<AExp>, Box<AExp>),
     Conjunction(Box<BExp>, Box<BExp>),

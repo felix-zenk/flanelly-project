@@ -9,7 +9,7 @@ use itertools::join;
 
 use nom::character::{complete::{alpha1, digit1, anychar, multispace1}, is_alphanumeric};
 use nom::branch::alt;
-use nom::{multi::{separated_nonempty_list, }, IResult, bytes::complete::{tag}};
+use nom::{multi::{separated_nonempty_list}, IResult, bytes::complete::{tag}};
 use nom::{sequence::delimited};
 use nom::{sequence::{pair}};
 
@@ -23,7 +23,7 @@ pub fn parse(s: &str) -> Result<Prog, String> {
                 .map(|idx| &line[..idx])
                 .unwrap_or(line)
         }), "\n");
-    
+
     // Then, remove surrounding whitespace.
     let s = s.trim();
 
@@ -32,8 +32,7 @@ pub fn parse(s: &str) -> Result<Prog, String> {
         Ok((rest, p)) => {
             if rest.is_empty() {
                 Ok(p)
-            }
-            else {
+            } else {
                 Err(format!("Parsing failed. The following code was not parsed. {:}", rest))
             }
         }
@@ -41,7 +40,7 @@ pub fn parse(s: &str) -> Result<Prog, String> {
             Err(format!("Parsing failed. {:}", e))
         }
     }
-} 
+}
 
 /// Grammar for the concrete syntax:
 ///
@@ -118,7 +117,7 @@ fn num_neg(s: &str) -> IResult<&str, AExp> {
     let (s, _) = tag("-")(s)?;
     let (s, n_str) = digit1(s)?;
     let n: i32 = n_str.parse().unwrap();
-    Ok((s, {Num(-n)}))
+    Ok((s, { Num(-n) }))
 }
 
 /// An addition term consists of multiple multiplication terms. mul + ... + mul
@@ -128,7 +127,7 @@ fn add(s: &str) -> IResult<&str, AExp> {
     // TODO: Use `fold_first` in the future: https://github.com/rust-lang/rust/issues/68125
     let mut iter = summands.into_iter();
     let hd = iter.next().unwrap();
-    let res = iter.fold(hd, |acc: AExp, x: AExp| -> AExp {Add(Box::new(acc), Box::new(x))});
+    let res = iter.fold(hd, |acc: AExp, x: AExp| -> AExp { Add(Box::new(acc), Box::new(x)) });
     Ok((s, res))
 }
 
@@ -139,7 +138,7 @@ fn mul(s: &str) -> IResult<&str, AExp> {
     // TODO: Use `fold_first` in the future: https://github.com/rust-lang/rust/issues/68125
     let mut iter = factors.into_iter();
     let hd = iter.next().unwrap();
-    let res = iter.fold(hd, |acc: AExp, x: AExp| -> AExp {Mul(Box::new(acc), Box::new(x))});
+    let res = iter.fold(hd, |acc: AExp, x: AExp| -> AExp { Mul(Box::new(acc), Box::new(x)) });
     Ok((s, res))
 }
 
@@ -152,7 +151,7 @@ fn aexp_atom(s: &str) -> IResult<&str, AExp> {
 fn num_nonneg(s: &str) -> IResult<&str, AExp> {
     let (s, n_str) = digit1(s)?;
     let n: i32 = n_str.parse().unwrap();
-    Ok((s, {Num(n)}))
+    Ok((s, { Num(n) }))
 }
 
 /// A variable
@@ -175,7 +174,7 @@ fn aexp_parens(s: &str) -> IResult<&str, AExp> {
 /// A less-equal comparison
 fn lesseq(s: &str) -> IResult<&str, BExp> {
     let (s, left) = aexp(s)?;
-    let (s, _) =  bin_op("<=", s)?;
+    let (s, _) = bin_op("<=", s)?;
     let (s, right) = aexp(s)?;
     Ok((s, LessEq(Box::new(left), Box::new(right))))
 }
@@ -184,7 +183,7 @@ fn conjunction(s: &str) -> IResult<&str, BExp> {
     let (s, factors) = separated_nonempty_list(|s2| bin_op("&&", s2), bexp_atom)(s)?;
     let mut iter = factors.into_iter();
     let hd = iter.next().unwrap();
-    let res = iter.fold(hd, |acc: BExp, x: BExp| -> BExp {Conjunction(Box::new(acc), Box::new(x))});
+    let res = iter.fold(hd, |acc: BExp, x: BExp| -> BExp { Conjunction(Box::new(acc), Box::new(x)) });
     Ok((s, res))
 }
 
@@ -192,7 +191,7 @@ fn disjunction(s: &str) -> IResult<&str, BExp> {
     let (s, summands) = separated_nonempty_list(|s2| bin_op("||", s2), disjunction)(s)?;
     let mut iter = summands.into_iter();
     let hd = iter.next().unwrap();
-    let res = iter.fold(hd, |acc: BExp, x: BExp| -> BExp {Disjunction(Box::new(acc), Box::new(x))});
+    let res = iter.fold(hd, |acc: BExp, x: BExp| -> BExp { Disjunction(Box::new(acc), Box::new(x)) });
     Ok((s, res))
 }
 

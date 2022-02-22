@@ -2,7 +2,7 @@ use std::{fmt::{Display, Debug}};
 use serde::{Serialize, Deserialize};
 
 /// A program variable `x` is just a reference to a string.
-#[derive(PartialEq,Clone,Eq,Hash,Debug,Serialize,Deserialize)]
+#[derive(PartialEq, Clone, Eq, Hash, Debug, Serialize, Deserialize)]
 pub struct VarName(String);
 
 impl VarName {
