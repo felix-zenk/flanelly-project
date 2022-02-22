@@ -11,13 +11,13 @@ use std::{collections::HashSet, fmt::Display, hash::Hash};
 /// - Partial order: `s1 <= s2   <=>   s1.set.is_superset(s2)` (See how subset vs. superset is exchanged here - but this is just convention, so that it fits our definition of `join_bin` instead of `meet_bin`)
 /// - For now: Only arithmetic expressions, could be extended in the future to boolean expressions and more
 /// - Internal implementation as a hash set
-#[derive(Debug,PartialEq,Clone,Eq,Serialize,Deserialize)]
+#[derive(Debug, PartialEq, Clone, Eq, Serialize, Deserialize)]
 pub struct ExpSetLat {
-    set: HashSet<AExp>
+    set: HashSet<AExp>,
 }
 
 impl Hash for ExpSetLat {
-    fn hash<H: std::hash::Hasher>(&self, _: &mut H) { }
+    fn hash<H: std::hash::Hasher>(&self, _: &mut H) {}
 }
 
 impl ExpSetLat {
@@ -30,7 +30,7 @@ impl ExpSetLat {
 
     /// Add a set of expressions
     pub fn extend(&mut self, set: HashSet<AExp>) {
-        set.into_iter().for_each(|a| {self.set.insert(a);});
+        set.into_iter().for_each(|a| { self.set.insert(a); });
     }
 }
 
@@ -45,17 +45,31 @@ impl SemiLat for ExpSetLat {
 
 impl FlowSemantics for ExpSetLat {
     fn eval_transfer_function(n: &Node, set: &Self) -> Self {
-        todo!()
-    }
-
-    /// In the beginning, no expression is available
-    fn init_start() -> Self {
-        Self::init()
+        let mut c_set = set.clone();
+        match n {
+            Node::Init | Node::Terminal | Node::Skip => {
+                c_set
+            }
+            Node::Assign(v, a) => {
+                c_set.clear_var(&v);
+                c_set.extend(a.sub_aexps());
+                c_set
+            }
+            Node::Branch(bexp) => {
+                c_set.extend(bexp.sub_aexps());
+                c_set
+            }
+        }
     }
 
     /// The init element is the "top" element of the semi-lattice, i.e. the empty set
     fn init() -> Self {
         ExpSetLat::new(HashSet::new())
+    }
+
+    /// In the beginning, no expression is available
+    fn init_start() -> Self {
+        Self::init()
     }
 }
 
@@ -67,7 +81,7 @@ impl Display for ExpSetLat {
         match iter.next() {
             Some(a) => {
                 write!(f, "{:}", a)?;
-                iter.try_for_each(|a| {write!(f, ", {:}", a)})?;
+                iter.try_for_each(|a| { write!(f, ", {:}", a) })?;
             }
             None => {}
         }
