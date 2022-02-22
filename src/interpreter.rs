@@ -18,12 +18,7 @@ impl MemConfig {
     /// Write operation
     pub fn assign(&mut self, x: &VarName, n: i32) {
         let MemConfig(map) = self;
-        match x {
-            None => {}
-            VarName => {
-                map.insert(**x, n)  // TODO maybe x.clone()
-            }
-        }
+        map.insert(x.clone(), n);
     }
 }
 
@@ -55,9 +50,9 @@ pub fn eval_prog_atom(p: &ProgAtom, mut mem: MemConfig) -> MemConfig {
         }
         Cond(b, p1, p2) => {
             if eval_bexp(b, &mem) {
-                eval_prog_atom(p1, mem)
+                eval_prog(p1, mem)
             } else {
-                eval_prog_atom(p2, mem)
+                eval_prog(p2, mem)
             }
         }
         While(b, p1) => {

@@ -81,7 +81,8 @@ fn aexp(s: &str) -> IResult<&str, AExp> {
 
 /// A boolean expression is a less-eq comparison.
 fn bexp(s: &str) -> IResult<&str, BExp> {
-    lesseq(s)  // TODO maybe change to alt((neg, or))(s)
+    // lesseq(s)
+    alt((negation, disjunction))(s)
 }
 
 //////////
@@ -188,7 +189,7 @@ fn conjunction(s: &str) -> IResult<&str, BExp> {
 }
 
 fn disjunction(s: &str) -> IResult<&str, BExp> {
-    let (s, summands) = separated_nonempty_list(|s2| bin_op("||", s2), disjunction)(s)?;
+    let (s, summands) = separated_nonempty_list(|s2| bin_op("||", s2), conjunction)(s)?;
     let mut iter = summands.into_iter();
     let hd = iter.next().unwrap();
     let res = iter.fold(hd, |acc: BExp, x: BExp| -> BExp { Disjunction(Box::new(acc), Box::new(x)) });
@@ -203,8 +204,9 @@ fn negation(s: &str) -> IResult<&str, BExp> {
 
 
 fn bexp_atom(s: &str) -> IResult<&str, BExp> {
-    alt((lesseq, var, bexp_parens))(s)  // TODO maybe remove var
+    alt((lesseq, bexp_parens))(s)
 }
+
 
 fn bexp_parens(s: &str) -> IResult<&str, BExp> {
     delimited(pair(tag("("), multispace0),
