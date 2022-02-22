@@ -37,7 +37,9 @@ pub fn parse(s: &str) -> Result<Prog, String> {
                 Err(format!("Parsing failed. The following code was not parsed. {:}", rest))
             }
         }
-        Err(e) => {Err(format!("Parsing failed. {:}", e))}
+        Err(e) => {
+            Err(format!("Parsing failed. {:}", e))
+        }
     }
 } 
 
@@ -80,7 +82,7 @@ fn aexp(s: &str) -> IResult<&str, AExp> {
 
 /// A boolean expression is a less-eq comparison.
 fn bexp(s: &str) -> IResult<&str, BExp> {
-    lesseq(s)
+    lesseq(s)  // TODO maybe change to alt((neg, or))(s)
 }
 
 //////////
@@ -177,6 +179,40 @@ fn lesseq(s: &str) -> IResult<&str, BExp> {
     let (s, right) = aexp(s)?;
     Ok((s, LessEq(Box::new(left), Box::new(right))))
 }
+
+fn conjunction(s: &str) -> IResult<&str, BExp> {
+    let (s, factors) = separated_nonempty_list(|s2| bin_op("&&", s2), bexp_atom)(s)?;
+    let mut iter = factors.into_iter();
+    let hd = iter.next().unwrap();
+    let res = iter.fold(hd, |acc: BExp, x: BExp| -> BExp {Conjunction(Box::new(acc), Box::new(x))});
+    Ok((s, res))
+}
+
+fn disjunction(s: &str) -> IResult<&str, BExp> {
+    let (s, summands) = separated_nonempty_list(|s2| bin_op("||", s2), disjunction)(s)?;
+    let mut iter = summands.into_iter();
+    let hd = iter.next().unwrap();
+    let res = iter.fold(hd, |acc: BExp, x: BExp| -> BExp {Disjunction(Box::new(acc), Box::new(x))});
+    Ok((s, res))
+}
+
+fn negation(s: &str) -> IResult<&str, BExp> {
+    let (s, _) = tag("!")(s)?;
+    let (s, n_str) = bexp(s)?;
+    Ok((s, Negation(Box::new(n_str))))
+}
+
+
+fn bexp_atom(s: &str) -> IResult<&str, BExp> {
+    alt((lesseq, var, bexp_parens))(s)  // TODO maybe remove var
+}
+
+fn bexp_parens(s: &str) -> IResult<&str, BExp> {
+    delimited(pair(tag("("), multispace0),
+              bexp,
+              pair(multispace0, tag(")")))(s)
+}
+
 
 //////////////
 // Programs //

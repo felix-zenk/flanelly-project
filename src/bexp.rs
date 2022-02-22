@@ -9,7 +9,7 @@ pub enum BExp {
     LessEq(Box<AExp>, Box<AExp>),
     Conjunction(Box<BExp>, Box<BExp>),
     Disjunction(Box<BExp>, Box<BExp>),
-    Negation,
+    Negation(Box<BExp>),
 }
 
 impl Display for BExp {
@@ -19,13 +19,13 @@ impl Display for BExp {
                 write!(f, "{} <= {}", left, right)
             }
             BExp::Conjunction(left, right) => {
-                write!(f, "{} and {}", left, right)
+                write!(f, "{} && {}", left, right)
             }
             BExp::Disjunction(left, right) => {
-                write!(f, "({} or {})", left, right)
+                write!(f, "({} || {})", left, right)
             }
-            BExp::Negation => {
-                write!(f, "not {}", self)
+            BExp::Negation(val) => {
+                write!(f, "!{}", val)
             }
         }
     }
@@ -38,14 +38,11 @@ impl BExp {
                 // Rust Expl.: See also `AExp::sub_aexps` for a more detailed explanation 
                 a1.sub_aexps().union(&a2.sub_aexps()).cloned().collect()
             }
-            BExp::Conjunction(a1, a2) => {
-                // a1.sub_aexps().union(&a2.sub_aexps()).cloned().collect()
+            BExp::Conjunction(b1, b2) | BExp::Disjunction(b1, b2) => {
+                b1.sub_aexps().union(&b2.sub_aexps()).cloned().collect()
             }
-            BExp::Disjunction(a1, a2) => {
-
-            }
-            BExp::Negation => {
-                // Negation of self.sub_aexps().clone()
+            BExp::Negation(b1) => {
+                b1.sub_aexps()
             }
         }
     }
